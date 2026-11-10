@@ -1,6 +1,7 @@
 services:
   - type: web
     name: zeexai-crm-backend
+    plan: free
     runtime: node
     rootDir: crm-backend
     buildCommand: npm install && npm run build
