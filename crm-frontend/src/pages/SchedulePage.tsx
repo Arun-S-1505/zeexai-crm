@@ -326,15 +326,14 @@ export const SchedulePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Month Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '6px',
-              textAlign: 'center',
-            }}
-          >
+          {/* Mobile Swipe Notice */}
+          <div className="mobile-calendar-hint">
+            <span>Swipe horizontally to view full month &bull; Or tap <strong style={{ textDecoration: 'underline', cursor: 'pointer', color: '#6045f5' }} onClick={() => setViewMode('list')}>List View</strong></span>
+          </div>
+
+          {/* Month Grid with Touch-Scroll Wrap */}
+          <div className="calendar-scroll-wrap">
+            <div className="schedule-calendar-grid">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
               <div
                 key={d}
@@ -464,6 +463,7 @@ export const SchedulePage: React.FC = () => {
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       ) : (
@@ -528,7 +528,7 @@ export const SchedulePage: React.FC = () => {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div className="avatar avatar-soft" style={{ width: '22px', height: '22px', fontSize: '9px' }}>
-                            {a.assignedTo?.name ? a.assignedTo.name.slice(0, 2).toUpperCase() : 'AS'}
+                            {a.assignedTo?.name ? a.assignedTo.name.slice(0, 2).toUpperCase() : 'ZC'}
                           </div>
                           <span style={{ fontSize: '11px' }}>{a.assignedTo?.name || 'Unassigned'}</span>
                         </div>
