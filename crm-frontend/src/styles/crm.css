@@ -119,7 +119,8 @@
 .crm-shell .sidebar.collapsed .user-row { justify-content: center; }
 
 /* ── Main content ── */
-.crm-shell .main-content { margin-left: 252px; min-height: 100vh; flex: 1; transition: margin .2s; }
+.crm-shell .main-content { margin-left: 252px; min-height: 100vh; flex: 1; transition: margin-left .25s cubic-bezier(0.16, 1, 0.3, 1); width: calc(100% - 252px); max-width: 100%; }
+.crm-shell .main-content.collapsed { margin-left: 76px; width: calc(100% - 76px); }
 .crm-shell .topbar { height: 67px; border-bottom: 1px solid var(--crm-border); background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 34px; }
 .crm-shell .breadcrumb { display: flex; align-items: center; gap: 10px; color: #9699ad; font-size: 12px; }
 .crm-shell .breadcrumb strong { color: #42445b; font-weight: 600; }
@@ -308,48 +309,199 @@
 .crm-shell .form-grid input:focus, .crm-shell .form-grid select:focus, .crm-shell .form-grid textarea:focus { border-color: #8c7cff; box-shadow: 0 0 0 3px #6045f511; }
 .crm-shell .modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 23px; padding-top: 16px; border-top: 1px solid var(--crm-border); }
 
-/* ── Responsive ── */
-@media (max-width: 1100px) {
-  .crm-shell .sidebar { width: 76px; }
-  .crm-shell .sidebar .brand-copy,
-  .crm-shell .sidebar .workspace-text,
-  .crm-shell .sidebar .workspace-switch svg,
-  .crm-shell .sidebar .nav-label,
-  .crm-shell .sidebar .nav-item span,
-  .crm-shell .sidebar .nav-item em,
-  .crm-shell .sidebar .help-row span,
-  .crm-shell .sidebar .user-copy,
-  .crm-shell .sidebar .user-row > svg { display: none; }
-  .crm-shell .workspace-switch { justify-content: center; }
-  .crm-shell .nav-item { justify-content: center; }
-  .crm-shell .user-row { justify-content: center; }
-  .crm-shell .main-content { margin-left: 76px; }
-  .crm-shell .content-grid, .crm-shell .bottom-grid { grid-template-columns: 1fr; }
-  .crm-shell .stats-grid { grid-template-columns: repeat(2,1fr); }
+/* ── Mobile Sidebar & Drawer Architecture ── */
+.crm-shell .mobile-menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--crm-border);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  color: #334155;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.crm-shell .mobile-menu-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+.crm-shell .mobile-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 4px;
+}
+.crm-shell .mobile-close-btn:hover {
+  color: #ffffff;
 }
 
-@media (max-width: 700px) {
-  .crm-shell .topbar { padding: 0 16px; }
-  .crm-shell .breadcrumb { display: none; }
-  .crm-shell .global-search { display: none; }
-  .crm-shell .page-wrap { padding: 22px 16px; }
-  .crm-shell .page-heading { display: block; }
-  .crm-shell .heading-actions { margin-top: 18px; }
-  .crm-shell .stats-grid { gap: 9px; }
-  .crm-shell .stat-card { padding: 13px; }
-  .crm-shell .stat-value { font-size: 22px; }
-  .crm-shell .stat-change small { display: none; }
-  .crm-shell .table-toolbar { flex-wrap: wrap; }
-  .crm-shell .table-search { min-width: 100%; }
-  .crm-shell .lead-kpis { justify-content: space-between; gap: 8px; }
-  .crm-shell .lead-kpis strong { font-size: 16px; }
-  .crm-shell .sidebar { width: 0; padding: 0; overflow: hidden; }
-  .crm-shell .main-content { margin-left: 0; }
-  .crm-shell .content-grid { gap: 12px; }
-  .crm-shell .bottom-grid { gap: 12px; }
-  .crm-shell .topbar { height: 58px; }
-  .crm-shell .form-grid { grid-template-columns: 1fr; }
-  .crm-shell .form-grid label.wide { grid-column: auto; }
+.crm-shell .mobile-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 56, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  animation: crmFadeIn 0.2s ease-out;
+}
+
+@media (max-width: 1024px) {
+  .crm-shell .mobile-menu-btn {
+    display: inline-flex;
+  }
+  .crm-shell .mobile-close-btn {
+    display: inline-flex;
+  }
+  .crm-shell .main-content,
+  .crm-shell .main-content.collapsed {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  .crm-shell .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px !important;
+    max-width: 85vw;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+    overflow-y: auto;
+  }
+  .crm-shell .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.45);
+  }
+  .crm-shell .collapse-btn {
+    display: none !important;
+  }
+  .crm-shell .sidebar .brand-copy,
+  .crm-shell .sidebar .workspace-text,
+  .crm-shell .sidebar .nav-label,
+  .crm-shell .sidebar .nav-item span,
+  .crm-shell .sidebar .user-copy {
+    display: flex !important;
+  }
+  .crm-shell .sidebar .workspace-switch {
+    justify-content: flex-start !important;
+  }
+  .crm-shell .sidebar .nav-item {
+    justify-content: flex-start !important;
+  }
+  .crm-shell .content-grid,
+  .crm-shell .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .crm-shell .topbar {
+    padding: 0 16px;
+    height: 60px;
+  }
+  .crm-shell .breadcrumb {
+    display: none !important;
+  }
+  .crm-shell .global-search {
+    display: none !important;
+  }
+  .crm-shell .page-wrap {
+    padding: 16px 12px 32px !important;
+  }
+  .crm-shell .crm-module-header,
+  .crm-shell .page-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+  .crm-shell .crm-actions,
+  .crm-shell .heading-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .crm-shell .crm-stats-grid,
+  .crm-shell .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .crm-shell .stat-card {
+    padding: 14px 16px;
+  }
+  .crm-shell .crm-filter-bar {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+    padding: 12px;
+  }
+  .crm-shell .crm-search-box {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+  .crm-shell .crm-filter-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  .crm-shell .crm-filter-group select,
+  .crm-shell .crm-filter-select {
+    width: 100% !important;
+  }
+  .crm-shell .table-toolbar {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 8px;
+  }
+  .crm-shell .table-search {
+    min-width: 100%;
+  }
+  .crm-shell .lead-kpis {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .crm-shell .crm-table-container,
+  .crm-shell .table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100vw;
+  }
+  .crm-shell .crm-table,
+  .crm-shell table {
+    min-width: 650px;
+  }
+  .crm-shell .brochure-downloads-table {
+    min-width: 700px;
+  }
+  .crm-shell .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .crm-shell .form-row,
+  .crm-shell .form-row.three-col {
+    grid-template-columns: 1fr !important;
+  }
+  .crm-shell .crm-modal-card {
+    width: 95% !important;
+    max-height: 92vh !important;
+    margin: auto;
+  }
+  /* Messages 3-pane stack for mobile screens */
+  .crm-shell .messages-hub {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: 600px;
+  }
 }
 
 

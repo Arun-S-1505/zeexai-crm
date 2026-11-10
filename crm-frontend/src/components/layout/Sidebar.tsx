@@ -17,16 +17,30 @@ import {
   ChevronRight,
   ChevronDown,
   LogOut,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
   collapsed: boolean;
   setCollapsed: (c: boolean) => void;
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  collapsed,
+  setCollapsed,
+  mobileOpen = false,
+  setMobileOpen,
+}) => {
   const { user, logout } = useAuth();
+
+  const handleNavClick = () => {
+    if (setMobileOpen) {
+      setMobileOpen(false);
+    }
+  };
 
   const navWorkspace = [
     { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
@@ -55,6 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
       <NavLink
         key={item.path}
         to={item.path}
+        onClick={handleNavClick}
         className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
         style={{ textDecoration: 'none' }}
       >
@@ -66,13 +81,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
   };
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
       <div className="brand">
         <div className="brand-mark">Z</div>
         <div className="brand-copy">
           <strong>Z-CRM</strong>
           <span>Enterprise Portal</span>
         </div>
+        {setMobileOpen && (
+          <button
+            className="mobile-close-btn"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close Navigation"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       <button className="workspace-switch">

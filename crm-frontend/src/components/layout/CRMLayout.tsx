@@ -1,24 +1,50 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Bell, Search, ChevronDown } from 'lucide-react';
+import { Bell, Search, ChevronDown, Menu } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/crm.css';
 
 export const CRMLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
 
   return (
     <div className="crm-shell">
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <main className="main-content" style={{ marginLeft: collapsed ? '76px' : '252px' }}>
+      {/* Mobile Drawer Backdrop */}
+      {mobileOpen && (
+        <div
+          className="mobile-sidebar-backdrop"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
+
+      <main className={`main-content ${collapsed ? 'collapsed' : ''}`}>
         <header className="topbar">
-          <div className="breadcrumb">
-            <span>Workspace</span>
-            <span>/</span>
-            <strong>Portal</strong>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open Navigation Menu"
+            >
+              <Menu size={20} />
+            </button>
+
+            <div className="breadcrumb">
+              <span>Workspace</span>
+              <span>/</span>
+              <strong>Portal</strong>
+            </div>
           </div>
+
           <div className="top-actions">
             <div className="global-search">
               <Search size={17} />
