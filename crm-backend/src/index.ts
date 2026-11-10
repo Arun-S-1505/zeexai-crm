@@ -87,22 +87,27 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/leads', leadsRoutes);
-app.use('/api/brochure-downloads', brochureDownloadsRoutes);
-app.use('/api/schedule', scheduleRoutes);
-app.use('/api/messages', messagesRoutes);
-app.use('/api/campaigns', campaignsRoutes);
-app.use('/api/direct-mail', directMailRoutes);
-app.use('/api/quotations', quotationsRoutes);
-app.use('/api/assignments', assignmentsRoutes);
-app.use('/api/acknowledgements', acknowledgementsRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/reports', reportsRoutes);
-app.use('/api/settings', settingsRoutes);
-app.use('/api/intake', intakeRoutes);
+// API Routes — Mount with both /api prefix and root for maximum hosting flexibility
+const mountAllRoutes = (prefix: string) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/dashboard`, dashboardRoutes);
+  app.use(`${prefix}/leads`, leadsRoutes);
+  app.use(`${prefix}/brochure-downloads`, brochureDownloadsRoutes);
+  app.use(`${prefix}/schedule`, scheduleRoutes);
+  app.use(`${prefix}/messages`, messagesRoutes);
+  app.use(`${prefix}/campaigns`, campaignsRoutes);
+  app.use(`${prefix}/direct-mail`, directMailRoutes);
+  app.use(`${prefix}/quotations`, quotationsRoutes);
+  app.use(`${prefix}/assignments`, assignmentsRoutes);
+  app.use(`${prefix}/acknowledgements`, acknowledgementsRoutes);
+  app.use(`${prefix}/users`, usersRoutes);
+  app.use(`${prefix}/reports`, reportsRoutes);
+  app.use(`${prefix}/settings`, settingsRoutes);
+  app.use(`${prefix}/intake`, intakeRoutes);
+};
+
+mountAllRoutes('/api');
+mountAllRoutes('');
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

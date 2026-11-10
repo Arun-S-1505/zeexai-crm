@@ -1,7 +1,17 @@
 import axios from 'axios';
 
+// Automatically format the API base URL to ensure proper /api prefix and no trailing slashes
+const getBaseApiUrl = (): string => {
+  const envUrl = (import.meta.env.VITE_CRM_API_URL || '').trim();
+  if (!envUrl) return '/api';
+  const stripped = envUrl.replace(/\/+$/, '');
+  return stripped.endsWith('/api') ? stripped : `${stripped}/api`;
+};
+
+export const API_BASE_URL = getBaseApiUrl();
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_CRM_API_URL || '/api',
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 
@@ -42,7 +52,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshRes = await axios.post(
-          `${import.meta.env.VITE_CRM_API_URL || '/api'}/auth/refresh`,
+          `${API_BASE_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         );
