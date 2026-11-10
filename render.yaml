@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: zeexai-crm-backend
+    runtime: node
+    rootDir: crm-backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        value: zeexai_crm
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        sync: false
+      - key: INTEGRATION_API_KEY
+        generateValue: true
+
